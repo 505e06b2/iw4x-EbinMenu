@@ -1,0 +1,166 @@
+#include "ui_mp/ebinmenu_defines.inc"
+
+{
+	menuDef {
+		name "ebinmenu"
+		rect 0 0 640 480 HORIZONTAL_ALIGN_SUBLEFT VERTICAL_ALIGN_SUBTOP
+		foreColor 1 1 1 1
+		focusColor 1 1 1 1
+		blurWorld 7
+		allowedBinding "+talk"
+
+		onOpen {
+			if(localVarString("ui_ebinmenu_menu") == "") {
+				setLocalVarString "ui_ebinmenu_menu" ( "CLIENT" );
+			}
+			setLocalVarString "ui_ebinmenu_hint_text" ( "@NULL_EMPTY" );
+
+			//vip
+			if(dvarstring("ui_ebinmenu_care_package_bullets") == "") { setDvar "ui_ebinmenu_care_package_bullets" 0; }
+			if(dvarstring("ui_ebinmenu_infinite_ammo") == "") { setDvar "ui_ebinmenu_infinite_ammo" 0; }
+
+			RESET_UI_DVARS
+		}
+
+		onClose {
+			scriptmenuresponse "back";
+		}
+
+		onEsc {
+			scriptmenuresponse "back";
+		}
+
+		BACKGROUND_PIECE("black", 0.4,;)
+		BACKGROUND_PIECE("mockup_bg_glow", 0, exp forecolor a ( ( ( sin( milliseconds( ) / 1500 ) + 1 ) * 0.25 ) + 0.25 ))
+		BACKGROUND_PIECE("mockup_bg_glow", 0, exp forecolor a ( ( ( sin( milliseconds( ) / 480 ) + 1 ) * 0.25 ) + 0.25 ))
+
+		itemDef //icon
+		{
+			rect 10 58 128 128 1 1
+			decoration
+			visible 1
+			style WINDOW_STYLE_SHADER
+			forecolor 1 1 1 0.275
+			exp material ( EBINMENU_ICON ) //exp seems necessary - dynamic load??
+		}
+
+		itemDef //side bar bg
+		{
+			rect -64 0 280 480 1 0
+			style WINDOW_STYLE_SHADER
+			decoration
+			visible 1
+			forecolor 0 0 0 0.25
+			background "gradient_fadein_fadebottom"
+		}
+
+		itemDef //Title
+		{
+			rect 0 0 272 28 HORIZONTAL_ALIGN_LEFT VERTICAL_ALIGN_TOP
+			decoration
+			visible 1
+			forecolor COLOR_FOCUSED
+			textfont 9
+			textalign ITEM_ALIGN_TOP_RIGHT
+			textalignx -60
+			textscale 0.5
+			text "@EBIN_MENU_TITLE"
+		}
+
+		#undef MENU_PERMISSION_LEVEL
+		#define MENU_PERMISSION_LEVEL PERMISSION_LEVEL_STANDARD
+
+		SUB_MENU_TITLE(0, "CLIENT", MENU_PERMISSION_LEVEL)
+		RIGHT_MENU_SHOWHIDDEN(0, "CLIENT", MENU_PERMISSION_LEVEL, "Show GUID", "ui_ebinmenu_showguid", dvarstring("secret_guid"))
+		RIGHT_MENU_TOGGLEDVARBOOL_INVERT(2, "CLIENT", MENU_PERMISSION_LEVEL, "Fullbright", "r_fullbright", "fullbright", "Enable fullbright\nMore FPS but no shadows or effects") //MENU_NAME needs to be a proper string as preprocessor function nesting + concat isn't happy with macros
+		RIGHT_MENU_TOGGLEDVARBOOL_INVERT(3, "CLIENT", MENU_PERMISSION_LEVEL, "Thirdperson", "cg_thirdPerson", "thirdperson", "Enable 3rd person camera")
+		RIGHT_MENU_TOGGLEDVARBOOL_INVERT(4, "CLIENT", MENU_PERMISSION_LEVEL, "Laser Sight", "laserForceOn", "laser", "Enable laser sights for all guns")
+		RIGHT_MENU_TOGGLEDVARBOOL_INVERTED(5, "CLIENT", MENU_PERMISSION_LEVEL, "Hide HUD", "cg_draw2D", "hud", "Hide all hud elements")
+		RIGHT_MENU_TOGGLEDVARBOOL_INVERTED(6, "CLIENT", MENU_PERMISSION_LEVEL, "Hide Gun", "cg_drawGun", "gun", "Hide gun from 1st person view")
+
+		#undef MENU_PERMISSION_LEVEL
+		#define MENU_PERMISSION_LEVEL PERMISSION_LEVEL_VIP
+		LEFT_MENU_SEPARATOR(1, MENU_PERMISSION_LEVEL)
+
+		SUB_MENU_TITLE(1, "VIP", MENU_PERMISSION_LEVEL)
+		RIGHT_MENU_CYCLEDVAR(0, "VIP", MENU_PERMISSION_LEVEL, "Special Loadout", "ui_ebinmenu_loadout", "loadout", "Enable a special loadout that can't normally be created in Create-A-Class", {
+			"@EBIN_BOOL_0"; "0";
+			"Noob tube"; "1";
+			"Handy"; "2";
+			"Turtle"; "3";
+		})
+		RIGHT_MENU_TOGGLEDVARBOOL(1, "VIP", MENU_PERMISSION_LEVEL, "Infinite Ammo", "ui_ebinmenu_infinite_ammo", "infinite_ammo", "Enable infinite reserve ammo\nBe careful! You still need to reload")
+		RIGHT_MENU_TOGGLEDVARBOOL(2, "VIP", MENU_PERMISSION_LEVEL, "Care Package Bullets", "ui_ebinmenu_care_package_bullets", "care_package_bullets", "Shoot care packages!")
+
+		#undef MENU_PERMISSION_LEVEL
+		#define MENU_PERMISSION_LEVEL PERMISSION_LEVEL_ADMIN
+		LEFT_MENU_SEPARATOR(2, MENU_PERMISSION_LEVEL)
+
+		SUB_MENU_TITLE(2, "ADMIN", MENU_PERMISSION_LEVEL)
+		RIGHT_MENU_TEXTDECORATION(0, "ADMIN", MENU_PERMISSION_LEVEL, "Server Uptime", secondsascountdown(milliseconds() / 1000))
+		RIGHT_MENU_TEXTDECORATION(1, "ADMIN", MENU_PERMISSION_LEVEL, "Connected Players", dvarint("ui_ebinmenu_human_players"))
+		RIGHT_MENU_TOGGLEDVARBOOL(3, "ADMIN", MENU_PERMISSION_LEVEL, "Wallhack", "ui_ebinmenu_wallhack", "wallhack", "See players though walls")
+
+		SUB_MENU_TITLE(3, "MATCH_SETTINGS", MENU_PERMISSION_LEVEL)
+		RIGHT_MENU_TEXTDECORATION(0, "MATCH_SETTINGS", MENU_PERMISSION_LEVEL, "Time Left", secondsascountdown(timeleft()))
+		RIGHT_MENU_TEXTDECORATION(1, "MATCH_SETTINGS", MENU_PERMISSION_LEVEL, "Time Elapsed", secondsascountdown(dvarint("ui_ebinmenu_match_time_elapsed")))
+		RIGHT_MENU_CYCLEDVAR_EX(3, "MATCH_SETTINGS", MENU_PERMISSION_LEVEL, "Set Time Left", "ui_ebinmenu_time_left", "timeleft", "Set round time remaining", {
+			"Unchanged";  "100";
+			"Unlimited";  "0";
+			"20 Minutes"; "40";
+			"10 Minutes"; "20";
+			"5 Minutes";  "10";
+			"2.5 Minutes";"5";
+			"30 Seconds"; "1";
+		}, if(dvarint("ui_ebinmenu_time_left") == 100) { setDvar "ui_ebinmenu_time_left" 0 })
+		RIGHT_MENU_CYCLEDVAR(4, "MATCH_SETTINGS", MENU_PERMISSION_LEVEL, "Forced Player Count", "ui_ebinmenu_player_count", "bots", "Set max amount of players+bots in the game", {
+			"18"; "18";
+			"12"; "12";
+			"6";  "6";
+			"0";  "0";
+		})
+		RIGHT_MENU_TOGGLEDVARBOOL_INVERT(5, "MATCH_SETTINGS", MENU_PERMISSION_LEVEL, "Disable Player Collision", "ui_ebinmenu_player_collision", "playercollision", "Allow players to walk through each other")
+
+		#undef MENU_PERMISSION_LEVEL
+		#define MENU_PERMISSION_LEVEL PERMISSION_LEVEL_HOST
+		LEFT_MENU_SEPARATOR(4, MENU_PERMISSION_LEVEL)
+
+		SUB_MENU_TITLE(4, "HOST", MENU_PERMISSION_LEVEL)
+		RIGHT_MENU_TOGGLEDVARBOOL(0, "HOST", MENU_PERMISSION_LEVEL, "Godmode", "ui_ebinmenu_god", "god", "srsly??")
+		RIGHT_MENU_TOGGLEDVARBOOL(1, "HOST", MENU_PERMISSION_LEVEL, "Aimbot", "ui_ebinmenu_aimbot", "aimbot", "srsly??!!")
+
+		itemDef //hint text
+		{
+			name "hint_text"
+			rect 0 -100 200 60 HORIZONTAL_ALIGN_LEFT VERTICAL_ALIGN_BOTTOM
+			decoration
+			autowrapped
+			visible 1
+			forecolor COLOR_FOCUSED
+			textfont 3
+			textalign ITEM_ALIGN_TOP_LEFT
+			textalignx 0
+			textscale FONTSCALE_SMALL
+			exp text ( localvarstring("ui_ebinmenu_hint_text") )
+		}
+
+		ITEM_BUTTON_BACK(scriptmenuresponse "back";)
+
+		/*
+		itemDef //version text
+		{
+			name "version_text"
+			rect 112 20 100 5 HORIZONTAL_ALIGN_LEFT VERTICAL_ALIGN_TOP
+			decoration
+			autowrapped
+			visible 1
+			forecolor 1 1 1 0.3
+			textfont 3
+			textalign ITEM_ALIGN_TOP_RIGHT
+			textalignx 0
+			textscale 0.2
+			exp text ( dvarstring("ui_ebinmenu_version") )
+		}
+		*/
+	}
+}
