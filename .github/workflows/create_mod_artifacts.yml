@@ -13,7 +13,7 @@ jobs:
     steps:
       - name: Clone repo
         run: |
-          git clone --recurse-submodules "https://github.com/${REPO_PATH}" "${FOLDER_NAME}"
+          git clone --recurse-submodules "https://github.com/${env:REPO_PATH}" "${env:FOLDER_NAME}"
 
       - name: Unzip existing iwds
         working-directory: ${{ env.FOLDER_NAME }}
