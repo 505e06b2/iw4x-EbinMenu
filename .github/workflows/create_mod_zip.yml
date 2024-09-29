@@ -35,11 +35,7 @@ jobs:
           mv 'bot_warfare/scriptdata/waypoints/' 'scriptdata/'
           rm -r 'bot_warfare/scriptdata/'
 
-      - name: Upload zip file
+      - name: Upload Artifact
         uses: actions/upload-artifact@v4.4.0
         with:
-          name: ${{ env.FOLDER_NAME }}
-          path: ${{ env.FOLDER_NAME }}
-          
-
-      
+          path: .
