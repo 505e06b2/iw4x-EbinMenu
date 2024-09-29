@@ -1,0 +1,37 @@
+on:
+  workflow_dispatch:
+
+jobs:
+  create_iwd:
+    runs-on: ubuntu-latest
+    env:
+      REPO_PATH: ${{ github.repository }}
+      FOLDER_NAME: ebinmenu
+      OUTPUT_FILE_NAME: ebinmenu.iwd
+    steps:
+      - name: Clone repo
+        run: |
+          git clone --recurse-submodules "https://github.com/${REPO_PATH}" "${FOLDER_NAME}"
+
+      - name: Unzip existing iwds
+        working-directory: ${{ env.FOLDER_NAME }}
+        run: unzip *.iwd
+
+      - name: Clean up unnecessary files
+        working-directory: ${{ env.FOLDER_NAME }}
+        run: |
+          rm *.iwd
+          find . -type f -name "*.md" -o -name "*.png" -delete
+
+      - name: Zip folder contents
+        working-directory: ${{ env.FOLDER_NAME }}
+        run: zip -r "../${OUTPUT_FILE_NAME}" * -x "*/.*"
+
+      - name: Upload zip file
+        uses: actions/upload-artifact@v3.2.1-node20
+        with:
+          name: ${{env.OUTPUT_FILE_NAME}}
+          path: ${{env.OUTPUT_FILE_NAME}}
+          
+
+      
