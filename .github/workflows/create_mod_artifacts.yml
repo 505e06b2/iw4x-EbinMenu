@@ -29,11 +29,11 @@ jobs:
         working-directory: ${{ env.FOLDER_NAME }}
         run: |
           'maps/mp/bots' | Remove-Item
-          'bot_warfare/maps/mp/bots/' | Move-Item 'maps/mp/'
+          'bot_warfare/maps/mp/bots/' | Move-Item -Destination 'maps/mp/'
           'bot_warfare/maps/' | Remove-Item -Recurse
 
           'scriptdata/waypoints' | Remove-Item
-          'bot_warfare/scriptdata/waypoints/' | Move-Item 'scriptdata/'
+          'bot_warfare/scriptdata/waypoints/' | Move-Item -Destination 'scriptdata/'
           'bot_warfare/scriptdata/' | Remove-Item -Recurse
 
       - name: Upload UserRaw Artifact
