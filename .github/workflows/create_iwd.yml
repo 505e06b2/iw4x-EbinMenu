@@ -33,16 +33,13 @@ jobs:
           rm -r 'bot_warfare/maps/'
           rm 'scriptdata/waypoints'
           mv 'bot_warfare/scriptdata/waypoints/' 'scriptdata/'
-
-      - name: Zip folder contents
-        working-directory: ${{ env.FOLDER_NAME }}
-        run: zip -r "../${OUTPUT_FILE_NAME}" * -x '*/.*'
+          rm -r 'bot_warfare/scriptdata/'
 
       - name: Upload zip file
         uses: actions/upload-artifact@v4.4.0
         with:
           name: ${{ env.FOLDER_NAME }}
-          path: ${{ env.OUTPUT_FILE_NAME }}
+          path: ${{ env.FOLDER_NAME }}
           
 
       
