@@ -28,8 +28,11 @@ jobs:
       - name: Replace symlinks for bot_warfare
         working-directory: ${{ env.FOLDER_NAME }}
         run: |
-          mv 'bot_warfare/maps/mp/bots' 'maps/mp/bots'
-          mv 'bot_warfare/scriptdata/waypoints/' 'scriptdata/waypoints/'
+          rm 'maps/mp/bots'
+          mv 'bot_warfare/maps/mp/bots/' 'maps/mp/'
+          rm -r 'bot_warfare/maps/'
+          rm 'scriptdata/waypoints'
+          mv 'bot_warfare/scriptdata/waypoints/' 'scriptdata/'
 
       - name: Zip folder contents
         working-directory: ${{ env.FOLDER_NAME }}
