@@ -8,8 +8,8 @@ A native scriptmenu for MW2, inspired by GSC menus of the past and with a focus 
 
 ## Installation
 1. Follow the steps on the [Alterware forum](https://forum.alterware.dev/t/how-to-install-the-alterware-launcher/56) to download and install the Alterware launcher
-1. ~~Download the latest release~~
-1. ~~Place the `iwd` file in your `mods` folder~~
+1. Download the [latest release](https://github.com/505e06b2/iw4x-EbinMenu/releases/latest)
+1. From inside this zip, extract `ebinmenu` into your game's `mods` folder
 
 ## Manual Installation for Development
 ```bash
