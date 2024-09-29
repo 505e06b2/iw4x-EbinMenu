@@ -21,17 +21,25 @@ jobs:
         working-directory: ${{ env.FOLDER_NAME }}
         run: |
           rm *.iwd
-          find . -type f -name "*.md" -o -name "*.png" -delete
+          rm -r 'bot_warfare/bw-assets'
+          find . -type f -name "*.md" -delete
+          find . -type f -name "*.png" -delete
+
+      - name: Replace symlinks for bot_warfare
+        working-directory: ${{ env.FOLDER_NAME }}
+        run: |
+          mv 'bot_warfare/maps/mp/bots' 'maps/mp/bots'
+          mv 'bot_warfare/scriptdata/waypoints/' 'scriptdata/waypoints/'
 
       - name: Zip folder contents
         working-directory: ${{ env.FOLDER_NAME }}
-        run: zip -r "../${OUTPUT_FILE_NAME}" * -x "*/.*"
+        run: zip -r "../${OUTPUT_FILE_NAME}" * -x '*/.*'
 
       - name: Upload zip file
-        uses: actions/upload-artifact@v3.2.1-node20
+        uses: actions/upload-artifact@v4.4.0
         with:
-          name: ${{env.OUTPUT_FILE_NAME}}
-          path: ${{env.OUTPUT_FILE_NAME}}
+          name: ${{ env.FOLDER_NAME }}
+          path: ${{ env.OUTPUT_FILE_NAME }}
           
 
       
