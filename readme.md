@@ -1,7 +1,7 @@
 ![screenshot](https://github.com/user-attachments/assets/28b9c7f2-835a-4076-b6fb-6186826c0c36)  
-A native scriptmenu for MW2, inspired by GSC menus of the past and with a focus on administration
+A scriptmenu for MW2, inspired by GSC menus of the past and with a focus on administration
 
-## Why Native and not GSC?
+## Why a ScriptMenu and not GSC?
 - Doesn't appear in killcams
 - Mouse-friendly
 - Emulates the look and feel of the original in-game menus
