@@ -1,0 +1,3 @@
+[submodule "bot_warfare"]
+	path = bot_warfare
+	url = https://github.com/ineedbots/iw4_bot_warfare

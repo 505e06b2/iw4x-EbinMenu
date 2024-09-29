@@ -10,6 +10,6 @@ init() {
 	setDvarIfUninitialized("bots_loadout_rank", 70);
 	setDvarIfUninitialized("bots_loadout_prestige", 0);
 
-	botwarfare\scripts\mp\bots::init();
-	botwarfare\scripts\mp\bots_adapter_iw4x::init();
+	bot_warfare\scripts\mp\bots::init();
+	bot_warfare\scripts\mp\bots_adapter_iw4x::init();
 }
